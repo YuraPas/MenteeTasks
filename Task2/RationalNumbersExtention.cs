@@ -18,15 +18,15 @@ namespace RationalNumberHandler
         
         public static void SimplifyRationalNumber(this ref Rational  number)
         {
-            int greatestCommonDivisor = Gcd(number.numerator, number.denominator);
+            int greatestCommonDivisor = Gcd(number.Numerator, number.Denominator);
 
-            number.numerator /= greatestCommonDivisor;
-            number.denominator /= greatestCommonDivisor;
+            number.Numerator /= greatestCommonDivisor;
+            number.Denominator /= greatestCommonDivisor;
         }
 
         public static int CalculateLeastCommonMultiple(this Rational obj1, Rational obj2)
         {
-            int leastCommonMultiple = Lcm(obj1.denominator, obj2.denominator);
+            int leastCommonMultiple = Lcm(obj1.Denominator, obj2.Denominator);
 
             return leastCommonMultiple;
         }

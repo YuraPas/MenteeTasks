@@ -8,13 +8,16 @@ namespace RationalNumberHandler
     public struct Rational : IComparable<Rational>, IEquatable<Rational>
     {
 
-        public int numerator { get; set; }
-        public int denominator { get; set; }
+
+        public int Numerator { get; set; }
+        public int Denominator { get; set; }
 
         public static Rational CreateInstance(int numerator, int denominator)
         {
             if (denominator == 0)
+            {
                 throw new ArgumentException("Denominator can't be zero");
+            }
             else
             {
                 return new Rational(numerator, denominator);
@@ -27,27 +30,27 @@ namespace RationalNumberHandler
                 throw new ArgumentException("Denominator can't be zero");
 
 
-            this.numerator = numerator;
-            this.denominator = denominator;
+            this.Numerator = numerator;
+            this.Denominator = denominator;
         }
 
         public override string ToString()
         {
             this.SimplifyRationalNumber();
 
-            if (denominator == 1)
-                return numerator.ToString();
-            return $"{numerator}r{denominator}" ;
+            if (Denominator == 1)
+                return Numerator.ToString();
+            return $"{Numerator}r{Denominator}" ;
         }
 
 
-        public bool Equals(Rational other)
+        public bool Equals(Rational compareObject)
         {
             this.SimplifyRationalNumber();
-            other.SimplifyRationalNumber();
+            compareObject.SimplifyRationalNumber();
 
-            if (this.denominator == other.denominator &&
-                this.numerator == other.numerator)
+            if (this.Denominator == compareObject.Denominator &&
+                this.Numerator == compareObject.Numerator)
                 return true;
 
             return false;
@@ -65,9 +68,9 @@ namespace RationalNumberHandler
         public int CompareTo(Rational obj)
         {
             
-            if ((float)this.numerator / this.denominator > (float)obj.numerator / obj.denominator)
+            if ((float)this.Numerator / this.Denominator > (float)obj.Numerator / obj.Denominator)
                 return -1;
-            if ((float) this.numerator / this.denominator == (float)obj.numerator / obj.denominator)
+            if ((float) this.Numerator / this.Denominator == (float)obj.Numerator / obj.Denominator)
                 return 0;
 
             return 1;
@@ -77,43 +80,44 @@ namespace RationalNumberHandler
 
         public static Rational operator +(Rational firstObj, Rational secondObj)
         {
-            int firstPartOfNumerator = firstObj.numerator * (firstObj.CalculateLeastCommonMultiple(secondObj)
-                                               / firstObj.denominator);
-            int secondOfNumerator = secondObj.numerator * (firstObj.CalculateLeastCommonMultiple(secondObj)
-                                               / secondObj.denominator);
+            int firstPartOfNumerator = firstObj.Numerator * (firstObj.CalculateLeastCommonMultiple(secondObj)
+                                               / firstObj.Denominator);
+            int secondOfNumerator = secondObj.Numerator * (firstObj.CalculateLeastCommonMultiple(secondObj)
+                                               / secondObj.Denominator);
 
-            int denominator = firstObj.CalculateLeastCommonMultiple(secondObj);
+            int Denominator = firstObj.CalculateLeastCommonMultiple(secondObj);
 
-            return new Rational(firstPartOfNumerator + secondOfNumerator, denominator);
+            return new Rational(firstPartOfNumerator + secondOfNumerator, Denominator);
         }
 
         public static Rational operator -(Rational firstObj, Rational secondObj)
         {
-            int firstPartOfNumerator = firstObj.numerator * (firstObj.CalculateLeastCommonMultiple(secondObj)
-                                             / firstObj.denominator);
-            int secondOfNumerator = secondObj.numerator * (firstObj.CalculateLeastCommonMultiple(secondObj)
-                                               / secondObj.denominator);
+            int firstPartOfNumerator = firstObj.Numerator * (firstObj.CalculateLeastCommonMultiple(secondObj)
+                                             / firstObj.Denominator);
+            int secondOfNumerator = secondObj.Numerator * (firstObj.CalculateLeastCommonMultiple(secondObj)
+                                               / secondObj.Denominator);
 
-            int denominator = firstObj.CalculateLeastCommonMultiple(secondObj);
+            int Denominator = firstObj.CalculateLeastCommonMultiple(secondObj);
 
-            return new Rational(firstPartOfNumerator - secondOfNumerator, denominator);
+            return new Rational(firstPartOfNumerator - secondOfNumerator, Denominator);
         }
 
         public static Rational operator *(Rational firstObj, Rational secondObj)
         {
-            return new Rational(firstObj.numerator * secondObj.numerator, firstObj.denominator * secondObj.denominator);
+            return new Rational(firstObj.Numerator * secondObj.Numerator, firstObj.Denominator * secondObj.Denominator);
         }
 
-        //public static Rational operator /(Rational firstObj, Rational secondObj)
-        //{
+        public static Rational operator /(Rational firstObj, Rational secondObj)
+        {
+            return firstObj * new Rational(secondObj.Denominator, secondObj.Numerator); // simply reversing and passing to multiplication operator
+        }
 
-        //}
 
-        ////що саме заперечувати? до чого задіювати цей оператор ?
-        //public static Rational operator !(Rational firstObj)
-        //{
-
-        //}
+        public static Rational operator !(Rational firstObj)
+        {
+            //dont get how to implement it
+            throw new NotImplementedException();
+        }
 
         #endregion
     }

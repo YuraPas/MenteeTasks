@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArabicToRomanConverter", "Task1\ArabicToRomanConverter.csproj", "{5C93E57C-50DE-4EF2-9F67-93C37DA3FD1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RationalNumberHandler", "ConsoleApp1\RationalNumberHandler.csproj", "{F36E8033-2DEC-4E77-9EDD-E84FF96F82F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RationalNumberHandler", "Task2\RationalNumberHandler.csproj", "{F36E8033-2DEC-4E77-9EDD-E84FF96F82F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
