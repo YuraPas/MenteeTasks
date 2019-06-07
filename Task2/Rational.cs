@@ -27,8 +27,9 @@ namespace RationalNumberHandler
         public Rational(int numerator, int denominator)
         {
             if (denominator == 0)
+            {
                 throw new ArgumentException("Denominator can't be zero");
-
+            }
 
             this.Numerator = numerator;
             this.Denominator = denominator;
@@ -40,7 +41,7 @@ namespace RationalNumberHandler
 
             if (Denominator == 1)
                 return Numerator.ToString();
-            return $"{Numerator}r{Denominator}" ;
+            return $"{Numerator}r{Denominator}";
         }
 
 
@@ -67,10 +68,10 @@ namespace RationalNumberHandler
         /// <returns></returns>
         public int CompareTo(Rational obj)
         {
-            
+
             if ((float)this.Numerator / this.Denominator > (float)obj.Numerator / obj.Denominator)
                 return -1;
-            if ((float) this.Numerator / this.Denominator == (float)obj.Numerator / obj.Denominator)
+            if ((float)this.Numerator / this.Denominator == (float)obj.Numerator / obj.Denominator)
                 return 0;
 
             return 1;
