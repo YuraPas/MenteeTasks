@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArabicToRomanConverter", "T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RationalNumberHandler", "Task2\RationalNumberHandler.csproj", "{F36E8033-2DEC-4E77-9EDD-E84FF96F82F5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantSimulation", "RestaurantSimulation\RestaurantSimulation.csproj", "{4126E8FA-299C-4EF8-AEB8-034E6FA5DEE4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSlotEnumerator", "TimeSlotEnumerator\TimeSlotEnumerator.csproj", "{4F1516E0-7A37-4A50-85D4-A4D7C7FC295E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{F36E8033-2DEC-4E77-9EDD-E84FF96F82F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F36E8033-2DEC-4E77-9EDD-E84FF96F82F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F36E8033-2DEC-4E77-9EDD-E84FF96F82F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4126E8FA-299C-4EF8-AEB8-034E6FA5DEE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4126E8FA-299C-4EF8-AEB8-034E6FA5DEE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4126E8FA-299C-4EF8-AEB8-034E6FA5DEE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4126E8FA-299C-4EF8-AEB8-034E6FA5DEE4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F1516E0-7A37-4A50-85D4-A4D7C7FC295E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F1516E0-7A37-4A50-85D4-A4D7C7FC295E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F1516E0-7A37-4A50-85D4-A4D7C7FC295E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F1516E0-7A37-4A50-85D4-A4D7C7FC295E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
