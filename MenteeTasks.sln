@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RestaurantSimulation", "Res
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeSlotEnumerator", "TimeSlotEnumerator\TimeSlotEnumerator.csproj", "{4F1516E0-7A37-4A50-85D4-A4D7C7FC295E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TreeImplementation", "TreeImplementation\TreeImplementation.csproj", "{FA3638AB-8AC7-48D4-BD91-47617563776D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{4F1516E0-7A37-4A50-85D4-A4D7C7FC295E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4F1516E0-7A37-4A50-85D4-A4D7C7FC295E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4F1516E0-7A37-4A50-85D4-A4D7C7FC295E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA3638AB-8AC7-48D4-BD91-47617563776D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA3638AB-8AC7-48D4-BD91-47617563776D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA3638AB-8AC7-48D4-BD91-47617563776D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA3638AB-8AC7-48D4-BD91-47617563776D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
