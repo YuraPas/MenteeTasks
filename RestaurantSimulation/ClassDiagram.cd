@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="RestaurantSimulation.Chips" Collapsed="true">
+    <Position X="0.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Chips.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantSimulation.Client">
+    <Position X="0.5" Y="4" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAEAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Client.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantSimulation.Extra">
+    <Position X="5.75" Y="0.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AgAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAABAgAAAAA=</HashCode>
+      <FileName>Extra.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Food" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RestaurantSimulation.Food">
+    <Position X="1" Y="0.5" Width="3.25" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AgAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Food.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RestaurantSimulation.FoodReadyEventArgs" Collapsed="true">
+    <Position X="9.5" Y="2.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAA=</HashCode>
+      <FileName>FoodReadyEventArgs.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Food" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="RestaurantSimulation.HotDog" Collapsed="true">
+    <Position X="3" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>HotDog.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantSimulation.Ketchup" Collapsed="true">
+    <Position X="7.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>Ketchup.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantSimulation.Kitchen">
+    <Position X="8.25" Y="6.5" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAACAAAAAAAgAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Kitchen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantSimulation.Mustard" Collapsed="true">
+    <Position X="5" Y="2.75" Width="1.5" />
+    <InheritanceLine Type="RestaurantSimulation.Extra" FixedFromPoint="true">
+      <Path>
+        <Point X="7.25" Y="2.44" />
+        <Point X="7.25" Y="2.596" />
+        <Point X="5.75" Y="2.596" />
+        <Point X="5.75" Y="2.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Mustard.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantSimulation.Order">
+    <Position X="3.75" Y="4" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAAAAAAgBAAAA=</HashCode>
+      <FileName>Order.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RestaurantSimulation.Waitress">
+    <Position X="9.25" Y="4" Width="3.25" />
+    <AssociationLine Name="orders" Type="RestaurantSimulation.Order">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.063" Y="0.037" Height="0.182" Width="1.42" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACAEAABAAQAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Waitress.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="kitchen" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="orders" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Interface Name="RestaurantSimulation.Interfaces.IFood">
+    <Position X="9.75" Y="0.5" Width="2.75" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AgAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Interfaces\IFood.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
