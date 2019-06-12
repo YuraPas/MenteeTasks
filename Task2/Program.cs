@@ -17,6 +17,7 @@ namespace RationalNumberHandler
             Rational secondObj = Rational.CreateInstance(9, 4);
             Rational thirdObj = Rational.CreateInstance(18, 8);
 
+
             Console.WriteLine(firstObj); //outputs 3
             Console.WriteLine(secondObj); //outputs 9r4
 

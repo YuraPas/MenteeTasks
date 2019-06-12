@@ -35,6 +35,11 @@ namespace Task1
 
         public static string ToRoman(this int arabicNumb)
         {
+            if (arabicNumb < 0 || arabicNumb > 4000)
+            {
+                throw new ArgumentException("Argument should be greater that 0 but less that 4000!");
+            }
+
             String output = String.Empty;
             RomanNumeral romanNumeral = new RomanNumeral();
             int iterations = 0;
