@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RestaurantSimulation
 {
-    public class Client
+    public class Client // : IObservable<Order>
     {
         public double Happiness { get; set; }
         public string Name { get; }
@@ -28,5 +28,10 @@ namespace RestaurantSimulation
             Happiness = food.CalculateHappiness(Happiness);
             Console.WriteLine($"Food eaten, Client [name={Name}, happiness={Happiness}]");
         }
+
+        //public IDisposable Subscribe(IObserver<Order> observer)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
