@@ -10,7 +10,7 @@ namespace MenteeTasks.Tests
 {
 
     [TestFixture]
-    public class RationalNumberHandler
+    public class RationalNumberHandlerTests
     {
 
         [OneTimeSetUp]
@@ -20,7 +20,7 @@ namespace MenteeTasks.Tests
         }
 
         [Test]
-        public void CreateObjectWithZeroDenominator_GetException()
+        public void CreateInstanceWithZeroDenominator_GetException()
         {
             //arrange
             int numerator = 5;
@@ -49,7 +49,7 @@ namespace MenteeTasks.Tests
         }
 
         [Test]
-        public void SimplifyNumber_GetSimplified()
+        public void SimplifyRationalNumber_SimplifyNumber_GetSimplified()
         {
             //arrange
             Rational expected = new Rational(3, 6);

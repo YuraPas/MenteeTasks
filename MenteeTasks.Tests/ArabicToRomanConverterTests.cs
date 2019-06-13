@@ -6,7 +6,7 @@ namespace MenteeTasks.Tests
 {
 
     [TestFixture]
-    public class ArabicToRomanConverter
+    public class ArabicToRomanConverterTests
     {
         
         [OneTimeSetUp]
@@ -16,7 +16,7 @@ namespace MenteeTasks.Tests
         }
 
         [Test]
-        public void Convert1974ToRoman()
+        public void ToRoman_ValidArabicNumeral_ReturnsValidRoman()
         {
             //arrange
             int actual = 1974;
@@ -28,7 +28,7 @@ namespace MenteeTasks.Tests
         }
 
         [Test]
-        public void PassValueLessThatZero_GetException()
+        public void ToRoman_PassValueLessThatZero_GetException()
         {
             //arrange
             int actual = -5;
@@ -39,7 +39,7 @@ namespace MenteeTasks.Tests
             Assert.Throws<ArgumentException>(() => Extension.ToRoman(actual));
         }
         [Test]
-        public void PassValueGreaterThat4000_GetException()
+        public void ToRoman_PassValueGreaterThat4000_GetException()
         {
             //arrange
             int actual = 4500;
@@ -51,7 +51,7 @@ namespace MenteeTasks.Tests
         }
 
         [Test]
-        public void PassWrongValue_CompareErrorMessages()
+        public void ToRoman_WrongValue_EqualErrorMessages()
         {
             //arrange
             int actual = -100;
@@ -65,7 +65,7 @@ namespace MenteeTasks.Tests
         }
 
         [Test]
-        public void CompareRomanNumerals()
+        public void RetrieveElementByIndex_RetriveFirstNumeral_NumeralsMatch()
         {
             //arrange
             RomanNumeral romanNumeral = RomanNumeral.M;
@@ -79,7 +79,7 @@ namespace MenteeTasks.Tests
         }
 
         [Test]
-        public void CompareRomanNumeralValues()
+        public void RetrieveElementByIndex_GetValueOfNumeral_ValuesMatch()
         {
             //arrange
             RomanNumeral romanNumeral = RomanNumeral.M;
