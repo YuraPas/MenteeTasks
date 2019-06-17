@@ -16,6 +16,9 @@
   </Class>
   <Class Name="RestaurantSimulation.Extra">
     <Position X="5.75" Y="0.5" Width="3" />
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
     <TypeIdentifier>
       <HashCode>AgAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAABAgAAAAA=</HashCode>
       <FileName>Extra.cs</FileName>
@@ -71,7 +74,7 @@
     <Position X="5" Y="2.75" Width="1.5" />
     <InheritanceLine Type="RestaurantSimulation.Extra" FixedFromPoint="true">
       <Path>
-        <Point X="7.25" Y="2.44" />
+        <Point X="7.25" Y="2.055" />
         <Point X="7.25" Y="2.596" />
         <Point X="5.75" Y="2.596" />
         <Point X="5.75" Y="2.75" />

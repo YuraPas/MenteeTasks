@@ -1,14 +1,10 @@
 ﻿using RestaurantSimulation.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace RestaurantSimulation
 {
-    public class Client // : IObservable<Order>
+    public class Client
     {
         public double Happiness { get; set; }
         public string Name { get; }
@@ -25,13 +21,10 @@ namespace RestaurantSimulation
                 $"{food.MainFoodName} with {food.ExtraFoodName} ");
             Thread.Sleep(1500);
             Console.WriteLine("Csam csam nyam nyam");
+
             Happiness = food.CalculateHappiness(Happiness);
+
             Console.WriteLine($"Food eaten, Client [name={Name}, happiness={Happiness}]");
         }
-
-        //public IDisposable Subscribe(IObserver<Order> observer)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

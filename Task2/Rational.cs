@@ -7,32 +7,46 @@ namespace RationalNumberHandler
 
     public struct Rational : IComparable<Rational>, IEquatable<Rational>
     {
-
+        private int denominator;
 
         public int Numerator { get; set; }
-        public int Denominator { get; set; }
-
-        public static Rational CreateInstance(int numerator, int denominator)
+        public int Denominator
         {
-            if (denominator == 0)
+            get
+            {
+                return denominator;
+            }
+            set
+            {
+                if (value == 0)
+                {
+                    throw new ArgumentException("Denominator can't be zero");
+                }
+                denominator = value;
+            }
+        }
+
+        public static Rational CreateInstance(int numerator, int _denominator)
+        {
+            if (_denominator == 0)
             {
                 throw new ArgumentException("Denominator can't be zero");
             }
             else
             {
-                return new Rational(numerator, denominator);
+                return new Rational(numerator, _denominator);
             }
         }
 
-        public Rational(int numerator, int denominator)
+        public Rational(int numerator, int _denominator) : this()
         {
-            if (denominator == 0)
+            if (_denominator == 0)
             {
                 throw new ArgumentException("Denominator can't be zero");
             }
-
-            this.Numerator = numerator;
-            this.Denominator = denominator;
+             
+            Numerator = numerator;
+            Denominator = _denominator;
         }
 
         public override string ToString()
@@ -40,7 +54,10 @@ namespace RationalNumberHandler
             this.SimplifyRationalNumber();
 
             if (Denominator == 1)
+            {
                 return Numerator.ToString();
+            }
+
             return $"{Numerator}r{Denominator}";
         }
 
@@ -50,10 +67,11 @@ namespace RationalNumberHandler
             this.SimplifyRationalNumber();
             compareObject.SimplifyRationalNumber();
 
-            if (this.Denominator == compareObject.Denominator &&
-                this.Numerator == compareObject.Numerator)
+            if (Denominator == compareObject.Denominator &&
+                Numerator == compareObject.Numerator)
+            {
                 return true;
-
+            }
             return false;
         }
 
@@ -69,10 +87,14 @@ namespace RationalNumberHandler
         public int CompareTo(Rational obj)
         {
 
-            if ((float)this.Numerator / this.Denominator > (float)obj.Numerator / obj.Denominator)
+            if ((float)Numerator / Denominator > (float)obj.Numerator / obj.Denominator)
+            {
                 return -1;
-            if ((float)this.Numerator / this.Denominator == (float)obj.Numerator / obj.Denominator)
+            }
+            if ((float)Numerator / Denominator == (float)obj.Numerator / obj.Denominator)
+            {
                 return 0;
+            }
 
             return 1;
         }
@@ -116,8 +138,7 @@ namespace RationalNumberHandler
 
         public static Rational operator !(Rational firstObj)
         {
-            //dont get how to implement it
-            throw new NotImplementedException();
+            return new Rational(firstObj.Denominator, firstObj.Numerator);
         }
 
         #endregion

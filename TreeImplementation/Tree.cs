@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TreeImplementation
 {
@@ -25,10 +23,8 @@ namespace TreeImplementation
 
         public Tree(T value, params Tree<T>[] children) : this()
         {
-            this.Value = value;
-
-            this.Children = AddChildren(children);
-
+            Value = value;
+            Children = AddChildren(children);
         }
 
         public Tree(T value, Tree<T> left, Tree<T> right) : this()
@@ -42,7 +38,7 @@ namespace TreeImplementation
         {
             foreach (var child in children)
             {
-                this.Children.Add(child);
+                Children.Add(child);
                 child.Parent = this;
             }
 
@@ -62,10 +58,10 @@ namespace TreeImplementation
         public void PrintTree(int indent = 0)
         {
             Console.Write(String.Concat(Enumerable.Repeat("├──", indent)));
-            Console.WriteLine(this.Value);
+            Console.WriteLine(Value);
 
             indent++;
-            foreach (var child in this.Children)
+            foreach (var child in Children)
             {
                 child.PrintTree(indent);
             }
@@ -74,17 +70,13 @@ namespace TreeImplementation
 
         public bool Contains(Tree<T> item)
         {
-            if (this.Value == item.Value)
+            if (Value == item.Value)
             {
                 return true;
             }
 
-            foreach (var child in this.Children)
+            foreach (var child in Children)
             {
-                if( child.Value == item.Value)
-                {
-                    return true;
-                }
                 Contains(child);
             }
 

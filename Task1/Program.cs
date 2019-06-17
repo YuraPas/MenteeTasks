@@ -13,14 +13,14 @@ namespace Task1
             Console.WriteLine("Numbers must be in range from 0 to 3999");
             Console.WriteLine();
 
-            int inputNumb = AskInputFromConsole();
-
+            int inputNumb = GetInputFromConsole();
+            //use ref default value
             Console.WriteLine(inputNumb.ToRoman());
             Console.ReadLine();
 
         }
 
-        public static int AskInputFromConsole()
+        public static int GetInputFromConsole()
         {
             Console.Write("Enter number you want to convert: ");
             int inputNumb = Convert.ToInt32(Console.ReadLine());

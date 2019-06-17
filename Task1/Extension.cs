@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Task1
 {
@@ -40,7 +38,7 @@ namespace Task1
                 throw new ArgumentException("Argument should be greater that 0 but less that 4000!");
             }
 
-            String output = String.Empty;
+            string output = String.Empty;
             RomanNumeral romanNumeral = new RomanNumeral();
             int iterations = 0;
             int enumSize = Enum.GetValues(typeof(RomanNumeral)).Length;

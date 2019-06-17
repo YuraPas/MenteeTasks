@@ -1,27 +1,26 @@
 ﻿using RestaurantSimulation.Interfaces;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Reflection;
 
 namespace RestaurantSimulation
 {
     public class Kitchen
     {
+        private readonly string assemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+
         public IFood AddExtras(IFood mainFood, IEnumerable<string> extras)
         {
             foreach(var extra in extras)
             {
-                //figure out how to work with Ienumarable here
                 //Abstarct factory pattern can be used here
-                if(extra == "Ketchup")
-                {
-                    return new Ketchup(mainFood);
+                if (extra == "Ketchup")
+                { 
+                    return CreateInstance(extra, mainFood);
                 }
                 else if (extra == "Mustard")
                 {
-                    return new Mustard(mainFood);
+                    return CreateInstance(extra, mainFood);
                 }
             }
             return null;
@@ -31,7 +30,7 @@ namespace RestaurantSimulation
         {
             IFood mainFood = CreateMainFood(order.Food);
             IFood mainFoodWithExtras = AddExtras(mainFood, order.Extras);
-
+            
             Console.WriteLine($"Food prepeared: {mainFood.MainFoodName} with {mainFoodWithExtras.ExtraFoodName}");
             mainFoodWithExtras.MainFoodName = mainFood.MainFoodName;
 
@@ -43,14 +42,22 @@ namespace RestaurantSimulation
         {
             if (food == "HotDog")
             {
-                return new HotDog();
+                return CreateInstance(food);
             }
             else if (food == "Chips")
             {
-                return new Chips();
+                return CreateInstance(food);
             }
 
             return null;
         }
+
+        public IFood CreateInstance(string className, params object[] paramArray)
+        {
+            Type foodType = Type.GetType(assemblyName + "." + className); 
+
+            return (IFood)Activator.CreateInstance(foodType, args: paramArray);
+        }
+
     }
 }

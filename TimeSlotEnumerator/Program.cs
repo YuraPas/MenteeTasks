@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TimeSlotEnumerator
 {
@@ -35,7 +32,6 @@ namespace TimeSlotEnumerator
         }
 
 
-        // X, X-1, X+1, X-2, X+2, etc., use yield return maybe
         public static void DisplaySlots(TimeSlotCollection collection, int index, int slotsToShow)
         {
             collection.position = index;

@@ -1,9 +1,4 @@
 ﻿using RestaurantSimulation.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RestaurantSimulation
 {
@@ -13,11 +8,12 @@ namespace RestaurantSimulation
         public string MainFoodName { get; set; }
         public string ExtraFoodName { get; set; }
 
+        public abstract double CalculateHappiness(double happiness);
+
         protected Extra(IFood food)
         {
             Food = food;
         }
 
-        public abstract double CalculateHappiness(double happiness);
     }
 }
