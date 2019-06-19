@@ -32,11 +32,9 @@ namespace SentencesLinq
 
             //Display the average word count of the sentences
             Console.WriteLine(master.AverageWordCount(sentences));
-           
-            
 
-
-
+            //Put the words into alphabetical order and remove the duplicates (case insensitive)
+            master.WordsInAlpabeticOrder(sentences);
 
 
             Console.ReadKey();

@@ -15,10 +15,10 @@ namespace SentencesLinq
         {
             string[] strings =
              {
-                "You only live forever in the lights you make",
-                "When we were young we used to say",
-                "That you only hear the music when your heart begins to break",
-                "Now we are the kids from yesterday"
+                "You only live forever in the lights you make ",
+                "When we were young we used to say ",
+                "That you only hear the music when your heart begins to break ",
+                "Now we are the kids from yesterday "
             };
 
             return strings;
@@ -46,7 +46,6 @@ namespace SentencesLinq
             selectedWords.ToList().ForEach(i => Console.WriteLine(i));
         }
 
-
         public string GetLongestWord(string[] sentences)
         {
             string longestWord;
@@ -69,8 +68,28 @@ namespace SentencesLinq
             int totalCount = default(Int32);
 
             sentences.ToList().ForEach(i => totalCount += GetWordsCountInSentence(i));
-
+            
             return totalCount / sentences.Count();
+        }
+
+        public void WordsInAlpabeticOrder(string[] sentences)
+        {
+            string joinedSentences = String.Concat(sentences);
+
+            var sentencesArr = SplitSentenceIntoArray(joinedSentences);
+            
+            RemoveDuplicate(sentencesArr).OrderBy(w => w).ToList().ForEach(w => Console.Write(w + " "));
+   
+        }
+
+        public IEnumerable<string> RemoveDuplicate(string[] words)
+        {
+            var listWithoutDuplicates = words.Distinct(StringComparer.CurrentCultureIgnoreCase)
+                                             .Where(w => string.IsNullOrEmpty(w) != true)
+                                             .ToList();
+
+
+            return listWithoutDuplicates;
         }
 
     }
