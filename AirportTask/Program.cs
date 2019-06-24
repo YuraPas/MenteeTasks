@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using AirportTask;
 using GeoCoordinatePortable;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NLog;
 
 namespace AirportTask
@@ -15,45 +16,58 @@ namespace AirportTask
 
         static readonly string pathToDatFile = @"C:\Users\Рома\Downloads\airports.dat";
         static readonly string pathToJsonFile = @"C:\Users\Рома\Downloads\timezoneinfo.json";
-
+        static string basePath = @"C:\Users\Рома\Downloads\";
 
         static Regex pattern = new Regex("[ \" \\ ]"); // \N check problems here
         static Logger logger = LogManager.GetLogger("Custom Logger");
         static Func<double, double, double, Location> MethodName = GetLocation;
-        
+        static JsonSerializer serializer = new JsonSerializer();
 
 
         static void Main(string[] args)
         {
-            
+
             int rowsIgnored = 0;
-            
-            List<TimeZoneInfo> timeZoneAirports = ProccessJsonFile(pathToJsonFile);
-            List<Airport> Airports = ProccessFile(pathToDatFile, timeZoneAirports, ref rowsIgnored);
+            List<Airport> Airports = new List<Airport>();
 
-
-            logger.Info($"Rows ignored: {rowsIgnored}");
-
-            Console.WriteLine($"{Airports.Count} entries avavailable");
-
-            #region Serialization
-            //Зробив на прикладі сities 
-            var cities = Airports.Select(c => c.City).ToList();
-            List<CitySerialize> citiesToSerialize = new List<CitySerialize>();
-            JsonSerializer serializer = new JsonSerializer();
-
-            foreach (var city in cities)
+            if (File.Exists(basePath + "countries.json") && File.Exists(basePath + "cities.json") &&
+                File.Exists(basePath + "airports.json"))
             {
-                citiesToSerialize.Add((CitySerialize)city);
+                Airports = ProccessJsonFile<Airport>(basePath + "airports.json");
+                
+                2int range = Airports.Count();
+
+                var cities = ProccessJsonFile<City>(basePath + "cities.json");
+                var countries = ProccessJsonFile<Country>(basePath + "countries.json");
+
+                for (int i = 0; i < range; i++)
+                {
+                    Airports[i].City = cities[i];
+                    Airports[i].City.Country = countries[i];
+                    Airports[i].Country = countries[i];
+                }
+                
+
             }
 
-            using (StreamWriter file = File.AppendText(@"C:\Users\Рома\Downloads\cities.json"))
+            else
             {
 
-                serializer.Serialize(file, citiesToSerialize);
-            }
-            Console.WriteLine("Serialization completed");
+                List<TimeZoneInfo> timeZoneAirports = ProccessJsonFile<TimeZoneInfo>(pathToJsonFile);
+                Airports = ProccessFile(pathToDatFile, timeZoneAirports, ref rowsIgnored);
 
+                logger.Info($"Rows ignored: {rowsIgnored}");
+
+                Console.WriteLine($"{Airports.Count} entries avavailable");
+
+                #region Serialization
+
+                SerializeCities(Airports);
+                SerializeCounties(Airports);
+                SerializeAirports(Airports);
+
+                Console.WriteLine("Serialization completed");
+            }
             #endregion
 
             #region List all the countries by name in an ascending order, and display the number of airports they have
@@ -135,12 +149,45 @@ namespace AirportTask
 
         }
 
-        private static List<TimeZoneInfo> ProccessJsonFile(string pathToJsonFile)
+        private static void SerializeCounties(List<Airport> airports)
+        {
+            var countries = airports.Select(c => c.Country).ToList();
+
+            SerializeToFile(basePath + "countries.json", countries);
+
+        }
+
+        private static void SerializeAirports(List<Airport> airports)
+        {
+            var airportsList = airports.Select(c => (AirportSerialize)c).ToList();
+
+            SerializeToFile(basePath + "airports.json", airportsList);
+        }
+
+        private static void SerializeCities(List<Airport> airports)
+        {
+
+            var cities = airports.Select(c => (CitySerialize)c.City).ToList();
+
+            SerializeToFile(basePath + "cities.json", cities);
+
+        }
+
+        private static void SerializeToFile<T>(string path, List<T> elements)
+        {
+            using (StreamWriter file = File.AppendText(path))
+            {
+
+                serializer.Serialize(file, elements);
+            }
+        }
+
+        private static List<T> ProccessJsonFile<T>(string pathToJsonFile)
         {
             using (var jsonReader = new StreamReader(pathToJsonFile))
             {
                 string jsonLines = jsonReader.ReadToEnd();
-                var data = JsonConvert.DeserializeObject<List<TimeZoneInfo>>(jsonLines);
+                var data = JsonConvert.DeserializeObject<List<T>>(jsonLines);
 
                 return data;
 
@@ -199,9 +246,12 @@ namespace AirportTask
 
         private static bool IsCorrect(string[] items, string timeZone)
         {
-            if (Regex.IsMatch(items[4], @"(^$)") || Regex.IsMatch(items[5], @"(^$)") ||
-                                           items.Length != 11 || timeZone == null ||
-                                           items[4] == @"\N" || items[5] == @"\N")
+            if (Regex.IsMatch(items[4], @"(^$)") ||
+                Regex.IsMatch(items[5], @"(^$)") ||
+                items.Length != 11 ||
+                timeZone == null ||
+                items[4] == @"\N" ||
+                items[5] == @"\N")
             {
                 return false;
             }
@@ -278,7 +328,7 @@ namespace AirportTask
     #endregion
 
     //Map values from Json file
-    public struct TimeZoneInfo
+    public class TimeZoneInfo
     {
         public int AirportId { get; set; }
         public string TimeZoneInfoId { get; set; }
@@ -292,6 +342,25 @@ namespace AirportTask
         public string TimeZoneName { get; set; }
     }
 
+    public class AirportSerialize
+    {
+        public int Id { get; set; }
+        public string IATACode { get; set; }
+        public string ICAOCode { get; set; }
+        public string Name { get; set; }
+        public string FullName
+        {
+            get
+            {
+                return Name + " Airport";
+            }
+        }
+        public int CityId { get; set; }
+        public int CountryId { get; set; }
+        public string TimeZoneName { get; set; }
+        public Location Location { get; set; }
+
+    }
 }
 
 
