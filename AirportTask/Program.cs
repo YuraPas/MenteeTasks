@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using AirportTask;
 using GeoCoordinatePortable;
 using Newtonsoft.Json;
 using NLog;
@@ -11,76 +12,27 @@ namespace AirportTask
 {
     class Program
     {
+
+        static readonly string pathToDatFile = @"C:\Users\Рома\Downloads\airports.dat";
+        static readonly string pathToJsonFile = @"C:\Users\Рома\Downloads\timezoneinfo.json";
+
+
+        static Regex pattern = new Regex("[ \" \\ ]"); // \N check problems here
+        static Logger logger = LogManager.GetLogger("Custom Logger");
+        static Func<double, double, double, Location> MethodName = GetLocation;
+        
+
+
         static void Main(string[] args)
         {
-            Func<double, double, double, Location> MethodName = GetLocation;
-            List<Airport> Airports = new List<Airport>();
-            string line;
-            Regex pattern = new Regex("[ \" \\ ]"); // \N check problems here
-
-            string pathToDatFile = @"C:\Users\Рома\Downloads\airports.dat";
-            string pathToJsonFile = @"C:\Users\Рома\Downloads\timezoneinfo.json";
-
-            Logger logger = LogManager.GetLogger("Custom Logger");
+            
             int rowsIgnored = 0;
+            
+            List<TimeZoneInfo> timeZoneAirports = ProccessJsonFile(pathToJsonFile);
+            List<Airport> Airports = ProccessFile(pathToDatFile, timeZoneAirports, ref rowsIgnored);
 
-            using (var fileReader = new StreamReader(pathToDatFile))
-            {
-                using (var jsonReader = new StreamReader(pathToJsonFile))
-                {
-                    string json = jsonReader.ReadToEnd();
-                    var timeZoneAirports = JsonConvert.DeserializeObject<List<TimeZoneInfo>>(json);
-
-                    while ((line = fileReader.ReadLine()) != null)
-                    {
-                        //Reading N lines with linq
-                        // var lines = File.ReadLines(path).Take(1000).ToArray foreach loop then
-
-
-                        line = pattern.Replace(line, "");
-
-                        string[] items = line.Split(",", StringSplitOptions.None);
-
-                        int currentId = items[0].ToInt();
-
-                        var timeZone = timeZoneAirports.Where(c => c.AirportId == currentId).Select(c => c.TimeZoneInfoId).FirstOrDefault();
-
-                        if (Regex.IsMatch(items[4], @"(^$)") || Regex.IsMatch(items[5], @"(^$)") ||
-                                            items.Length != 11 || timeZone == null ||
-                                            items[4] == @"\N" || items[5] == @"\N")
-                        {
-                            logger.Info($"{items[0]} - {items[1]} - {items[2]} - {items[3]} - {items[4]} - {items[5]} - {items[6]}  ");
-                            rowsIgnored++;
-                            continue;
-                        }
-
-                       
-                        Country country = GetCountry(currentId, items[3]);
-
-                        City city = GetCity(currentId, items[2], items[0].ToInt(), timeZone, country);
-
-                        Airport airport = GetAirport(currentId, items[1], items[4], items[5], MethodName, items[6].ToDouble(),
-                                                     items[7].ToDouble(), items[8].ToDouble(), timeZone, city, country, currentId, currentId);
-
-
-                        Airports.Add(airport);
-                    }
-
-                }
-
-            }
 
             logger.Info($"Rows ignored: {rowsIgnored}");
-
-            try
-            {
-                int x = 0;
-                int y = 5 / x;
-            }   
-            catch(Exception ex)
-            {
-                logger.Error(ex, $"Exception occured: {ex.Message}");
-            }
 
             Console.WriteLine($"{Airports.Count} entries avavailable");
 
@@ -105,6 +57,7 @@ namespace AirportTask
             #endregion
 
             #region List all the countries by name in an ascending order, and display the number of airports they have
+
             var airportsInCountry = Airports.GroupBy(c => c.Country.Name).OrderBy(g => g.Key).Select(g => new
             {
                 ContryName = g.Key,
@@ -180,6 +133,80 @@ namespace AirportTask
 
             Console.ReadKey();
 
+        }
+
+        private static List<TimeZoneInfo> ProccessJsonFile(string pathToJsonFile)
+        {
+            using (var jsonReader = new StreamReader(pathToJsonFile))
+            {
+                string jsonLines = jsonReader.ReadToEnd();
+                var data = JsonConvert.DeserializeObject<List<TimeZoneInfo>>(jsonLines);
+
+                return data;
+
+            }
+        }
+
+        private static List<Airport> ProccessFile(string path, List<TimeZoneInfo> timeZoneAirports, ref int rowsIgnored)
+        {
+            List<Airport> result = new List<Airport>();
+            string line;
+            int currentId;
+
+            using (var fileReader = new StreamReader(path))
+            {
+                while ((line = fileReader.ReadLine()) != null)
+                {
+
+                    string[] items = TransformData(line);
+
+                    currentId = items[0].ToInt();
+
+                    var timeZone = timeZoneAirports.Where(c => c.AirportId == currentId).Select(c => c.TimeZoneInfoId).FirstOrDefault();
+
+                    if (IsCorrect(items, timeZone) != true)
+                    {
+                        logger.Info($"{items[0]} - {items[1]} - {items[2]} - {items[3]} - {items[4]} - {items[5]} - {items[6]}");
+                        rowsIgnored++;
+
+                        continue;
+                    }
+
+
+                    Country country = GetCountry(currentId, items[3]);
+
+                    City city = GetCity(currentId, items[2], items[0].ToInt(), timeZone, country);
+
+                    Airport airport = GetAirport(currentId, items[1], items[4], items[5], MethodName, items[6].ToDouble(),
+                                                 items[7].ToDouble(), items[8].ToDouble(), timeZone, city, country, currentId, currentId);
+
+
+                    result.Add(airport);
+                }
+
+            }
+
+            return result;
+        }
+
+        private static string[] TransformData(string line)
+        {
+            string newLine = pattern.Replace(line, "");
+
+            return newLine.Split(",", StringSplitOptions.None);
+
+        }
+
+        private static bool IsCorrect(string[] items, string timeZone)
+        {
+            if (Regex.IsMatch(items[4], @"(^$)") || Regex.IsMatch(items[5], @"(^$)") ||
+                                           items.Length != 11 || timeZone == null ||
+                                           items[4] == @"\N" || items[5] == @"\N")
+            {
+                return false;
+            }
+
+            return true;
         }
 
 
