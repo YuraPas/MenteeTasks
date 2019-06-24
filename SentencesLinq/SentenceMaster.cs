@@ -26,6 +26,7 @@ namespace SentencesLinq
 
         public int GetWordsCountInSentence(string item)
         {
+            //regex match
             int wordsInSentence = item.Split(' ').Where(s => !string.IsNullOrEmpty(s)).Count();
 
             //Console.WriteLine(wordsInSentence);
@@ -42,7 +43,7 @@ namespace SentencesLinq
         {
             string[] vowels = { "a", "e", "i", "o", "u" };
             var selectedWords = words.Where(w => vowels.Any(e => w.StartsWith(e)));
-
+            //  Where(w => w.StartsWith(vowels.Any(e => e.ToList().ForEach(i => return i )))));
             selectedWords.ToList().ForEach(i => Console.WriteLine(i));
         }
 
@@ -53,7 +54,7 @@ namespace SentencesLinq
             foreach (var item in sentences)
             {
                 longestWord = SplitSentenceIntoArray(item).OrderByDescending(w => w.Length).First();
-
+                //TODO: ПЕРЕРОБИТИ НА ЛІКН
                 if (LongestWord.Length < longestWord.Length)
                 {
                     LongestWord = longestWord;

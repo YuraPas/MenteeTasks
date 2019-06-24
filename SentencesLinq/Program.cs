@@ -14,9 +14,9 @@ namespace SentencesLinq
             var sentences = SentenceMaster.GetSentences();
 
             //Calculate of the word count of each sentences
-            foreach (var item in sentences)
+            foreach (var sentence in sentences)
             {
-                Console.WriteLine(master.GetWordsCountInSentence(item)); //delegate create mb
+                Console.WriteLine(master.GetWordsCountInSentence(sentence)); //delegate create mb
             }
             Console.WriteLine(new string('*',40));
 
@@ -30,7 +30,7 @@ namespace SentencesLinq
             //Find the longest word
             Console.WriteLine(master.GetLongestWord(sentences));
 
-            //Display the average word count of the sentences
+            
             Console.WriteLine(master.AverageWordCount(sentences));
 
             //Put the words into alphabetical order and remove the duplicates (case insensitive)

@@ -76,7 +76,7 @@ namespace XboxStatistics
                                         {
                                             name = game.Name,
                                             count = item.Value.AsEnumerable().Count(row => row.Rarity.CurrentCategory == "Rare")
-                                        }).ToList();
+                                        }).ToList().OrderByDescending(g => g.Key.count);
             var top3games = gamesRareAchievement.OrderByDescending(x => x.Key.count).Select(m => m.Key.name).Take(3).ToList();
 
             return string.Join(",", top3games);
@@ -106,8 +106,8 @@ namespace XboxStatistics
 
         static string ListAllOfMyStatisticsInBindingOfIsaac()
         {
-             var stats = Xbox.MyGames.OrderBy(g=> g.Name).Select(g => g.Name ).ToList(); //.Where(g => g.Name == "Binding of Isaac")
-
+            var stats = Xbox.MyGames.OrderBy(g => g.Name).Where(g => g.Name.Contains("Binding of Isaac")).ToList();
+         //   stats[0].
             return string.Empty;
         }
 
