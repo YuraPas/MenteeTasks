@@ -35,7 +35,7 @@ namespace AirportTask
             {
                 Airports = ProccessJsonFile<Airport>(basePath + "airports.json");
                 
-                2int range = Airports.Count();
+                int range = Airports.Count();
 
                 var cities = ProccessJsonFile<City>(basePath + "cities.json");
                 var countries = ProccessJsonFile<Country>(basePath + "countries.json");
