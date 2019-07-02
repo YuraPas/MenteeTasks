@@ -1,114 +1,170 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 
 namespace Epam.Exercises.CleanCode.EightQueens.ConsoleApp
 {
     class Program
     {
-        public static void Main(string[] args) {
+        public static void Main(string[] args)
+        {
             List<char[][]> solutions = new List<char[][]>();
 
-            char[][] result = new char[8][];
-            for (int r1 = 0; r1 < 8; r1++)
-                result[r1] = new char[8];
-            for (int r1 = 0; r1 < 8; r1++)
-            for (int r2 = 0; r2 < 8; r2++) { result[r1][r2] = '.'; }
+            int length = 8;
+            char[][] result = CreateArray(length);
+
+            result = AssignArray(result);
 
             SolveAllNQueens(result, 0, solutions);
 
             Console.WriteLine(solutions.Count);
-            for (int i = 0; i < solutions.Count; i++) {
-                Console.WriteLine("\nSolution " + (i + 1));
-
-                char[][] board = solutions[i];
-
-                for (int r = 0; r < board.Length; r++) {
-                    for (int c = 0; c < board[r].Length; c++)
-                        Console.Write(board[r][c] + " ");
-                    Console.WriteLine();
-                }
-            }
+            OuputResults(solutions);
 
             Console.ReadLine();
         }
 
-        private static void SolveAllNQueens(char[][] board, int col, List<char[][]> solutions) {
-            if (col == board.Length) {
-                char[][] copy = new char[board.Length][];
-                for (int r = 0; r < board.Length; r++)
-                    copy[r] = new char[board[0].Length];
-                for (int r = 0; r < board.Length; r++)
-                    for (int c = 0; c < board[0].Length; c++)
-                        copy[r][c] = board[r][c];
+        private static void SolveAllNQueens(char[][] board, int col, List<char[][]> solutions)
+        {
+            int length = board.Length;
+            if (col == length)
+            {
+                char[][] copy = CreateArray(length);
+                copy = board.Select(a => a.ToArray()).ToArray();
+
                 solutions.Add(copy);
-            } else {
-                for (int row = 0; row < board.Length; row++) {
+            }
+            else
+            {
+                for (int row = 0; row < board.Length; row++)
+                {
                     board[row][col] = 'Q';
                     bool canBeSafe = true;
-                    
-                    for (int i = 0; i < board.Length; i++) {
-                        bool found = false;
-                        for (int j = 0; j < board.Length; j++) {
-                            if (board[i][j] == 'Q') {
-                                if (found) {
-                                    canBeSafe = false;
-                                }
-                                found = true;
-                            }
-                        }
-                    }
-                    
-                    for (int i = 0; i < board.Length; i++) {
-                        bool found = false;
-                        for (int j = 0; j < board.Length; j++) {
-                            if (board[j][i] == 'Q') {
-                                if (found) {
-                                    canBeSafe = false;
-                                }
-                                found = true;
-                            }
-                        }
-                    }
-                    
-                    for (int offset = -board.Length; offset < board.Length; offset++) {
-                        bool found = false;
-                        for (int i = 0; i < board.Length; i++) {
-                            if (Inbounds(i, i + offset, board)) {
-                                if (board[i][i + offset] == 'Q') {
-                                    if (found) {
-                                        canBeSafe = false;
-                                    }
-                                    found = true;
-                                }
-                            }
-                        }
-                    }
 
-                    for (int offset = -board.Length; offset < board.Length; offset++) {
-                        bool found = false;
-                        for (int i = 0; i < board.Length; i++) {
-                            if (Inbounds(i, board.Length - offset - i - 1, board)) {
-                                if (board[i][board.Length - offset - i - 1] == 'Q') {
-                                    if (found) {
-                                        canBeSafe = false;
-                                    }
-                                    found = true;
-                                }
-                            }
-                        }
-                    }
+                    canBeSafe = Check(board, canBeSafe);
+
+                    canBeSafe = Check(board, canBeSafe, swap: true);
+
+                    canBeSafe = Check(board, canBeSafe, loopStart: -board.Length, inBoundsCheckNeeded: true);
+
+                    canBeSafe = Check(board, canBeSafe, loopStart: -board.Length, inBoundsCheckNeeded: true, sign: -1, offset: board.Length - 1);
 
                     if (canBeSafe)
+                    {
                         SolveAllNQueens(board, col + 1, solutions);
+                    }
+
                     board[row][col] = '.';
                 }
             }
         }
 
-        private static bool Inbounds(int row, int col, char[][] mat) {
-            return row >= 0 && row < mat.Length && col >= 0 && col < mat[0].Length;
+        private static bool Check(char[][] board, bool canBeSafe, bool swap = false, int loopStart = 0, bool inBoundsCheckNeeded = false, int sign = 1, int offset = 0)
+        {
+            int lenght = board.Length;
+
+            for (int i = loopStart; i < lenght; i++)
+            {
+                bool found = false;
+
+                for (int j = 0; j < lenght; j++)
+                {
+                    if (inBoundsCheckNeeded)
+                    {
+                        if (Inbounds(j, (sign * (i + j)) + offset, board))
+                        {
+                            (found, canBeSafe) = CheckIfEqualsQ(board[j][(sign * (i + j)) + offset], found, canBeSafe);
+                        }
+                    }
+                    else
+                    {
+                        if (swap)
+                        {
+                            (found, canBeSafe) = CheckIfEqualsQ(board[j][i], found, canBeSafe);
+                        }
+                        else
+                        {
+                            (found, canBeSafe) = CheckIfEqualsQ(board[i][j], found, canBeSafe);
+                        }
+                    }
+                }
+            }
+
+            return canBeSafe;
         }
 
+        private static (bool, bool) CheckIfEqualsQ(char item, bool found, bool canBeSafe)
+        {
+            if (item == 'Q')
+            {
+                if (found)
+                {
+                    canBeSafe = false;
+                }
+
+                found = true;
+            }
+
+            return (found, canBeSafe);
+        }
+
+        private static bool Inbounds(int row, int col, char[][] array)
+        {
+            if (row >= 0 && row < array.Length &&
+                col >= 0 && col < array[0].Length)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static void OuputResults(List<char[][]> solutions)
+        {
+            int count = 1;
+            foreach (var solution in solutions)
+            {
+                Console.WriteLine("\nSolution " + count);
+
+                for (int i = 0; i < solution.Length; i++)
+                {
+                    for (int y = 0; y < solution[i].Length; y++)
+                    {
+                        Console.Write(solution[i][y] + " ");
+                    }
+
+                    Console.WriteLine();
+                }
+
+                count++;
+            }
+        }
+
+        private static char[][] CreateArray(int lenght)
+        {
+            var array = new char[lenght][];
+
+            for (int i = 0; i < lenght; i++)
+            {
+                array[i] = new char[lenght];
+            }
+
+            return array;
+        }
+
+        private static char[][] AssignArray(char[][] array)
+        {
+            int length = array.Length;
+
+            for (int i = 0; i < length; i++)
+            {
+                for (int y = 0; y < length; y++)
+                {
+                    array[i][y] = '.';
+                }
+            }
+
+            return array;
+        }
     }
 }
