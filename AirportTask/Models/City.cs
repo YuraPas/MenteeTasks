@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using AirportTask.SerializeModels;
 
 namespace AirportTask
 {
-   public class City
+    public class City
     {
         public int CountryId { get; set; }
         public int Id { get; set; }

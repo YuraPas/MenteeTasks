@@ -1,21 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using AirportTask.SerializeModels;
 
 namespace AirportTask
 {
     public class Airport
     {
-        private string fullName;
         public int CityId { get; set; }
         public int CountryId { get; set; }
-        public string FullName
-        {
-            get
-            {
-                return Name + " Airport";
-            }
-        }
+        public string FullName => Name + " Airport";
         public int Id { get; set; }
         public string Name { get; set; }
 

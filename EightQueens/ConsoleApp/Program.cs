@@ -36,7 +36,7 @@ namespace Epam.Exercises.CleanCode.EightQueens.ConsoleApp
             }
             else
             {
-                for (int row = 0; row < board.Length; row++)
+                for (int row = 0; row < length; row++)
                 {
                     board[row][col] = 'Q';
                     bool canBeSafe = true;
