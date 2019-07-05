@@ -35,35 +35,44 @@ namespace BusinessLogicLayer
 
                 if (!service.IsValid(items, timeZone))
                 {
-                    
                     logger.LogInfo($"Invalid row: {currentId} - {airportName}");
                     rowsIgnored++;
 
                     continue;
                 }
-
-                string cityName = items[2];
-                string countryName = items[3];
-                string IATACode = items[4];
-                string ICAOCode = items[5];
-                double longitude = items[6].ToDouble();
-                double latitude = items[7].ToDouble();
-                double altitude = items[8].ToDouble();
-
-                Country country = dataInstantiator.GetCountry(currentId, countryName);
-
-                City city = dataInstantiator.GetCity(currentId, cityName, currentId, timeZone, country);
-
+                
                 Func<double, double, double, Location> GetLocation = dataInstantiator.GetLocation;
-                Airport airport = dataInstantiator.GetAirport(currentId, airportName, IATACode,
-                                                              ICAOCode, GetLocation, longitude,
-                                                              latitude, altitude, timeZone,
-                                                              city, country, currentId, currentId);
+                Airport airport = TransformLineToAirportObject(items, timeZone);
 
                 result.Add(airport);
             }
 
             return result;
+        }
+
+        private Airport TransformLineToAirportObject(string[] items, string timeZone)
+        {
+            int currentId = items[0].ToInt();
+            string airportName = items[1];
+            string cityName = items[2];
+            string countryName = items[3];
+            string IATACode = items[4];
+            string ICAOCode = items[5];
+            double longitude = items[6].ToDouble();
+            double latitude = items[7].ToDouble();
+            double altitude = items[8].ToDouble();
+
+            Country country = dataInstantiator.GetCountry(currentId, countryName);
+
+            City city = dataInstantiator.GetCity(currentId, cityName, currentId, timeZone, country);
+
+            Func<double, double, double, Location> GetLocation = dataInstantiator.GetLocation;
+            Airport airport = dataInstantiator.GetAirport(currentId, airportName, IATACode,
+                                                          ICAOCode, GetLocation, longitude,
+                                                          latitude, altitude, timeZone,
+                                                          city, country, currentId, currentId);
+
+            return airport;
         }
     }
 }
