@@ -21,11 +21,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SentencesLinq", "SentencesL
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeLinq", "EmployeeLinq\EmployeeLinq.csproj", "{B7704542-1CEA-451E-AB4E-6889438C8687}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AirportTask", "AirportTask\AirportTask.csproj", "{72283CEF-E363-4643-ACEF-2965DE9B68E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PresentationLayer", "AirportTask\PresentationLayer.csproj", "{72283CEF-E363-4643-ACEF-2965DE9B68E8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EightQueens", "EightQueens\ConsoleApp\EightQueens.csproj", "{C3501FA3-4104-41A0-BDE2-2AF20C38E606}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AdvancedAscii", "AdvancedAscii\ConsoleApp\AdvancedAscii.csproj", "{6514AAD3-5B4B-424B-85F3-6D6CAA934C30}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AirportTask", "AirportTask", "{DAB8CA67-7A4A-4210-88C7-FF82924E9C46}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayer", "DataAccessLayer\DataAccessLayer.csproj", "{116C2074-76B9-4130-8483-93FDD57877D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogicLayer", "BusinessLogicLayer\BusinessLogicLayer.csproj", "{6F3E9E37-5D2B-4A6C-96AC-0D0F142C9458}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -77,6 +83,14 @@ Global
 		{6514AAD3-5B4B-424B-85F3-6D6CAA934C30}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6514AAD3-5B4B-424B-85F3-6D6CAA934C30}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6514AAD3-5B4B-424B-85F3-6D6CAA934C30}.Release|Any CPU.Build.0 = Release|Any CPU
+		{116C2074-76B9-4130-8483-93FDD57877D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{116C2074-76B9-4130-8483-93FDD57877D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{116C2074-76B9-4130-8483-93FDD57877D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{116C2074-76B9-4130-8483-93FDD57877D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F3E9E37-5D2B-4A6C-96AC-0D0F142C9458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F3E9E37-5D2B-4A6C-96AC-0D0F142C9458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F3E9E37-5D2B-4A6C-96AC-0D0F142C9458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F3E9E37-5D2B-4A6C-96AC-0D0F142C9458}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +98,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8CE06A5A-C60C-4C4B-B060-362C2F9D6A61} = {18A76DE7-04D0-4300-8AAC-198FE0D8EECD}
 		{B7704542-1CEA-451E-AB4E-6889438C8687} = {18A76DE7-04D0-4300-8AAC-198FE0D8EECD}
+		{72283CEF-E363-4643-ACEF-2965DE9B68E8} = {DAB8CA67-7A4A-4210-88C7-FF82924E9C46}
+		{116C2074-76B9-4130-8483-93FDD57877D7} = {DAB8CA67-7A4A-4210-88C7-FF82924E9C46}
+		{6F3E9E37-5D2B-4A6C-96AC-0D0F142C9458} = {DAB8CA67-7A4A-4210-88C7-FF82924E9C46}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {46DFCBB7-108A-4BA7-8AD8-E54E599CC5D9}

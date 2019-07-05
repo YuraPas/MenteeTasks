@@ -1,4 +1,4 @@
-﻿namespace AirportTask.SerializeModels
+﻿namespace DataAccessLayer.SerializeModels
 {
     public class CitySerialize
     {

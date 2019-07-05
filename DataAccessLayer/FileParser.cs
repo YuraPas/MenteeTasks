@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace AirportTask
+namespace DataAccessLayer
 {
     public static class FileParser
     {

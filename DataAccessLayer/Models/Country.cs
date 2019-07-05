@@ -1,4 +1,4 @@
-﻿namespace AirportTask
+﻿namespace DataAccessLayer.Models
 {
     public class Country
     {

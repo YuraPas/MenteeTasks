@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AirportTask
+namespace BusinessLogicLayer
 {
     public static class StringExtensions
     {

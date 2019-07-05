@@ -1,10 +1,13 @@
-﻿using System;
+﻿using DataAccessLayer.Interfaces;
+using DataAccessLayer.Models;
+using System;
 
-namespace AirportTask
+namespace DataAccessLayer
 {
-    public class DataInstantiator
+    public class DataInstantiator : IDataInstantiator
     {
-        public static Location GetLocation(double longitude, double latitude, double altitude)
+
+        public Location GetLocation(double longitude, double latitude, double altitude)
         {
             Location instance = new Location()
             {
@@ -16,7 +19,7 @@ namespace AirportTask
             return instance;
         }
 
-        public static Country GetCountry(int id, string name)
+        public Country GetCountry(int id, string name)
         {
             Country instance = new Country()
             {
@@ -27,7 +30,7 @@ namespace AirportTask
             return instance;
         }
 
-        public static City GetCity(int id, string name, int countryId, string timeZone, Country country)
+        public City GetCity(int id, string name, int countryId, string timeZone, Country country)
         {
             City instance = new City()
             {
@@ -41,7 +44,7 @@ namespace AirportTask
             return instance;
         }
 
-        public static Airport GetAirport(int id, string name, string IATACode, string ICAOCode,
+        public Airport GetAirport(int id, string name, string IATACode, string ICAOCode,
                                         Func<double, double, double, Location> MethodName, double longitude, double latitude, double altitude, string timeZone,
                                         City city, Country country, int cityId, int countryId)
         {

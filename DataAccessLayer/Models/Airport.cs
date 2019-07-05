@@ -1,6 +1,6 @@
-﻿using AirportTask.SerializeModels;
+﻿using DataAccessLayer.SerializeModels;
 
-namespace AirportTask
+namespace DataAccessLayer.Models
 {
     public class Airport
     {
