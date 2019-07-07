@@ -1,12 +1,14 @@
-﻿using Newtonsoft.Json;
+﻿using DataAccessLayer.Interfaces;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace DataAccessLayer
 {
-    public static class FileParser
+    public class FileParser : IFileParser
     {
-        public static List<T> ProccessJsonFile<T>(string pathToJsonFile)
+        public List<T> ProccessJsonFile<T>(string pathToJsonFile)
         {
             using (var jsonReader = new StreamReader(pathToJsonFile))
             {
@@ -17,12 +19,11 @@ namespace DataAccessLayer
             }
         }
 
-        public static string[] GetAllLinesFromFile(string path)
+        public string[] GetAllLinesFromFile(string path)
         {
             var lines = File.ReadAllLines(path);
 
             return lines;
         }
-
     }
 }

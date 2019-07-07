@@ -10,41 +10,52 @@ namespace BusinessLogicLayer
 {
     public class DataProcessor : IDataProcessor
     {
-        private IDataDAL dataDAL;
-        private IDataInstantiator dataInstantiator;
+        IDataDAL dataDAL;
+        IDataInstantiator dataInstantiator;
         ICustomLogger logger;
         IServiceBLL service;
+        IFileParser fileParser;
 
-        public DataProcessor(IDataDAL dataDAL, IServiceBLL service)
+        public DataProcessor(IDataInstantiator dataInstantiator, IDataDAL dataDAL, IServiceBLL service, ICustomLogger logger, IFileParser fileParser)
         {
+            this.dataInstantiator = dataInstantiator;
             this.dataDAL = dataDAL;
             this.service = service;
+            this.logger = logger;
+            this.fileParser = fileParser;
         }
 
         public List<Airport> ProccessFile(string pathToFile, List<TimeZoneInformation> timeZoneAirports, ref int rowsIgnored)
         {
             List<Airport> result = new List<Airport>();
 
-            foreach (var line in FileParser.GetAllLinesFromFile(pathToFile))
+            foreach (var line in fileParser.GetAllLinesFromFile(pathToFile))
             {
-                string[] items = service.TransformData(line);
-                int currentId = items[0].ToInt();
-                string airportName = items[1];
-
-                var timeZone = dataDAL.GetAirportsTimeZone(timeZoneAirports, currentId);
-
-                if (!service.IsValid(items, timeZone))
+                try
                 {
-                    logger.LogInfo($"Invalid row: {currentId} - {airportName}");
-                    rowsIgnored++;
+                    string[] items = service.SplitLine(line);
 
-                    continue;
+                    int currentId = items[0].ToInt();
+                    string airportName = items[1];
+
+                    var timeZone = dataDAL.GetAirportsTimeZone(timeZoneAirports, currentId);
+
+                    if (!service.IsValid(items, timeZone))
+                    {
+                        logger.LogInfo($"Invalid row: {currentId} - {airportName}");
+                        rowsIgnored++;
+
+                        continue;
+                    }
+
+                    Airport airport = TransformLineToAirportObject(items, timeZone);
+
+                    result.Add(airport);
                 }
-                
-                Func<double, double, double, Location> GetLocation = dataInstantiator.GetLocation;
-                Airport airport = TransformLineToAirportObject(items, timeZone);
-
-                result.Add(airport);
+                catch (Exception ex)
+                {
+                    logger.LogError(ex.Message);
+                }
             }
 
             return result;

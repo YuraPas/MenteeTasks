@@ -11,6 +11,5 @@ namespace BusinessLogicLayer.Interfaces
         void SerializeAirports(IEnumerable<Airport> airports);
         void SerializeCities(IEnumerable<Airport> airports);
         List<Airport> ProccessDataFromSerializeFiles();
-        bool SerializedFilesExist();
     }
 }

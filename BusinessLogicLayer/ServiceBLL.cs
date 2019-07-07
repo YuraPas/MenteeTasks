@@ -2,6 +2,7 @@
 using DataAccessLayer.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,12 +11,18 @@ namespace BusinessLogicLayer
 {
     public class ServiceBLL : IServiceBLL
     {
-        public string[] TransformData(string line)
+        public string[] SplitLine(string line)
         {
-            Regex pattern = new Regex("[ \" \\ ]");
-            string newLine = pattern.Replace(line, string.Empty);
+            string newLine = RemoveQuotes(line);
 
             return newLine.Split(",", StringSplitOptions.None);
+        }
+
+        public string RemoveQuotes(string line)
+        {
+            string newLine = line.Replace("\"", string.Empty);
+
+            return newLine;
         }
 
         public bool IsValid(string[] items, string timeZone)
@@ -33,5 +40,45 @@ namespace BusinessLogicLayer
 
             return true;
         }
-    }
+
+        public bool SerializedFilesExist()
+        {
+            if (FileExists("countries.json") &&
+                FileExists("cities.json") &&
+                FileExists("airports.json"))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool FileExists(string fileName)
+        {
+            string basePath = @"C:\Users\Рома\Downloads\";
+
+            if (File.Exists(basePath + fileName))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public List<Airport> AssignGatheredData(List<Airport> airports, List<City> cities, List<Country> countries)
+        {
+            int range = airports.Count();
+
+            for (int i = 0; i < range; i++)
+            {
+                airports[i].City = cities[i];
+                airports[i].City.Country = countries[i];
+                airports[i].Country = countries[i];
+            }
+
+            return airports;
+        }
+
+    
+}
 }

@@ -13,10 +13,12 @@ namespace BusinessLogicLayer
     public class DataSerializeBLL : IDataSerializeBLL
     {
         private IDataDAL dataDAL;
+        private IServiceBLL serviceBLL;
 
-        public DataSerializeBLL(IDataDAL dataDAL)
+        public DataSerializeBLL(IDataDAL dataDAL, IServiceBLL serviceBLL)
         {
             this.dataDAL = dataDAL;
+            this.serviceBLL = serviceBLL;
         }
         public void SerializeCounties(IEnumerable<Airport> airports)
         {
@@ -45,47 +47,11 @@ namespace BusinessLogicLayer
             var cities = dataDAL.GetAllCities();
             var countries = dataDAL.GetAllCountries();
 
-            airports = AssignGatheredData(airports, cities, countries);
+            airports = serviceBLL.AssignGatheredData(airports, cities, countries);
 
             return airports;
         }
 
-        public bool SerializedFilesExist()
-        {
-            if (FileExists("countries.json") &&
-                FileExists("cities.json") &&
-                FileExists("airports.json"))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool FileExists(string fileName)
-        {
-            string basePath = @"C:\Users\Рома\Downloads\";
-
-            if (File.Exists(basePath + fileName))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        private List<Airport> AssignGatheredData(List<Airport> airports, List<City> cities, List<Country> countries)
-        {
-            int range = airports.Count();
-
-            for (int i = 0; i < range; i++)
-            {
-                airports[i].City = cities[i];
-                airports[i].City.Country = countries[i];
-                airports[i].Country = countries[i];
-            }
-
-            return airports;
-        }
+     
     }
 }

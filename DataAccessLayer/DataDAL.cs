@@ -13,30 +13,32 @@ namespace DataAccessLayer
     public class DataDAL : IDataDAL
     {
         private readonly string basePath = @"C:\Users\Рома\Downloads\";
+        private IFileParser fileParser;
         private JsonSerializer serializer;
 
-        public DataDAL()
+        public DataDAL(IFileParser fileParser)
         {
+            this.fileParser = fileParser;
             serializer = new JsonSerializer();
         }
 
         public List<City> GetAllCities()
         {
-            var cities = FileParser.ProccessJsonFile<City>(basePath + "cities.json");
+            var cities = fileParser.ProccessJsonFile<City>(basePath + "cities.json");
 
             return cities;
         }
 
         public List<Country> GetAllCountries()
         {
-            var countries = FileParser.ProccessJsonFile<Country>(basePath + "countries.json");
+            var countries = fileParser.ProccessJsonFile<Country>(basePath + "countries.json");
 
             return countries;
         }
 
         public List<Airport> GetAllAirports()
         {
-            var airports = FileParser.ProccessJsonFile<Airport>(basePath + "airports.json");
+            var airports = fileParser.ProccessJsonFile<Airport>(basePath + "airports.json");
 
             return airports;
         }

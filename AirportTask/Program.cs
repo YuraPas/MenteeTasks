@@ -29,15 +29,17 @@ namespace PresentationLayer
 
             List<Airport> airports = new List<Airport>();
             serializeBLL = serviceProvider.GetService<IDataSerializeBLL>();
-            IDataProcessor dataProcessor = serviceProvider.GetService<IDataProcessor>();
+            var dataProcessor = serviceProvider.GetService<IDataProcessor>();
+            var serviceBLL = serviceProvider.GetService<IServiceBLL>();
+            var fileParser = serviceProvider.GetService<IFileParser>();
 
-            if (serializeBLL.SerializedFilesExist())
+            if (serviceBLL.SerializedFilesExist())
             {
                 airports = serializeBLL.ProccessDataFromSerializeFiles();
             }
             else
             {
-                var timeZoneAirports = FileParser.ProccessJsonFile<TimeZoneInformation>(PathToJsonFile);
+                var timeZoneAirports = fileParser.ProccessJsonFile<TimeZoneInformation>(PathToJsonFile);
 
                 int rowsIgnored = 0;
                 airports = dataProcessor.ProccessFile(PathToDatFile, timeZoneAirports, ref rowsIgnored);
@@ -79,9 +81,7 @@ namespace PresentationLayer
 
         private static void ClosestAirportByCoordinates(List<Airport> airports)
         {
-            // Let the user enter a GPS coordinate and find out which airport is the closest to that coordinate and display its Name and City
-            // ORDER: Latitude, Longitude, Altitude
-            var inputLocation = new GeoCoordinate(69.241186, 41.217860, 1400);
+            var inputLocation = new GeoCoordinate(latitude: 69.241186,longitude: 41.217860,altitude: 1400);
             var nearest = airports.Where(x => x.Location.Latitude <= 90 && x.Location.Latitude >= -90 &&
                                          x.Location.Longitude <= 90 && x.Location.Longitude >= -90)
                                   .Select(x => new
@@ -98,7 +98,6 @@ namespace PresentationLayer
 
         private static void DisplayAirportInfoByIATACode(List<Airport> airports)
         {
-            // Let the user enter an IATA code and display the following information about the given
             Console.Write("Enter IATA code: ");
             string inputIATACode = Console.ReadLine();
 
@@ -110,7 +109,6 @@ namespace PresentationLayer
 
         private static void CityWithMostAirports(List<Airport> airports)
         {
-            // Find the city which has got the most airports. If there are more than one cities with the same amount, display all of them.
             var cityWithMostAirpots = airports.GroupBy(c => c.City.Name)
                                               .Select(c => new
                                               {
@@ -119,24 +117,13 @@ namespace PresentationLayer
                                               })
                                               .OrderByDescending(c => c.Count);
 
-            // OPTION 1
             var maxAirpotsCity = cityWithMostAirpots.Select(c => c).First();
-
-            /*  OPTION 2
-           var maxCities = cityWithMostAirpots.Where(c => c.Count == cityWithMostAirpots.Max(y => y.Count)).Select(c => c).ToList();
-           foreach (var city in maxCities)
-           {
-               Console.WriteLine($"City {city.CityName} has {city.Count} airports");
-
-           }
-           */
 
             userInterface.Write($"City {maxAirpotsCity.CityName} has {maxAirpotsCity.Count} airports");
         }
 
         private static void OutputAllCountriesWithNumberOfAirportsThenHave(List<Airport> airports)
         {
-            // List all the countries by name in an ascending order, and display the number of airports they have
             var airportsInCountry = airports.GroupBy(c => c.Country.Name)
                                            .OrderBy(g => g.Key)
                                            .Select(g => new
@@ -188,6 +175,9 @@ namespace PresentationLayer
             builder.RegisterType<ServiceBLL>().As<IServiceBLL>();
             builder.RegisterType<DataProcessor>().As<IDataProcessor>();
             builder.RegisterType<DataDAL>().As<IDataDAL>();
+            builder.RegisterType<DataInstantiator>().As<IDataInstantiator>();
+            builder.RegisterType<CustomLogger>().As<ICustomLogger>();
+            builder.RegisterType<FileParser>().As<IFileParser>();
         }
     }
 }
