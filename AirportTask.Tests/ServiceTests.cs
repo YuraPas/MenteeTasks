@@ -61,6 +61,5 @@ namespace AirportTask.Tests
             Assert.IsFalse(actual);
 
         }
-
     }
 }

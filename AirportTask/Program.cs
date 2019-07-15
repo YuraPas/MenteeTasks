@@ -8,6 +8,7 @@ using BusinessLogicLayer.Interfaces;
 using DataAccessLayer;
 using DataAccessLayer.Interfaces;
 using DataAccessLayer.Models;
+using DataAccessLayer.Repositories;
 using DataAccessLayer.SerializeModels;
 using GeoCoordinatePortable;
 using Microsoft.Extensions.DependencyInjection;
@@ -31,11 +32,11 @@ namespace PresentationLayer
             serializeBLL = serviceProvider.GetService<IDataSerializeBLL>();
             var dataProcessor = serviceProvider.GetService<IDataProcessor>();
             var serviceBLL = serviceProvider.GetService<IServiceBLL>();
-            var fileParser = serviceProvider.GetService<IFileParser>();
+            var fileParser = serviceProvider.GetService<IFileService>();
 
             if (serviceBLL.SerializedFilesExist())
             {
-                airports = serializeBLL.ProccessDataFromSerializeFiles();
+                airports = dataProcessor.ProccessData();
             }
             else
             {
@@ -53,6 +54,10 @@ namespace PresentationLayer
                 userInterface.Write("Serialization completed");
             }
 
+            SeedDataToDb(airports);
+
+            airports = AddLocationToAirport(airports);
+            
             OutputSeparationLine();
             OutputAllCountriesWithNumberOfAirportsThenHave(airports);
 
@@ -68,6 +73,43 @@ namespace PresentationLayer
             DisposeServices();
 
             userInterface.ReadKey();
+
+        }
+
+        private static List<Airport> AddLocationToAirport(List<Airport> airports)
+        {
+            using (var unitOfWork = new UnitOfWork(new AirportContext()))
+            {
+                foreach (var item in airports)
+                {
+                    item.Location = unitOfWork.Locations.GetById(item.Id);
+                }
+            }
+
+            return airports;
+
+        }
+
+        private static void SeedDataToDb(List<Airport> airports)
+        {
+            using (var db = new AirportContext())
+            {
+                if (!db.Airports.Any() && !db.Cities.Any() && !db.Countries.Any())
+                {
+                    using (var unitOfWork = new UnitOfWork(db))
+                    {
+                        foreach (var item in airports)
+                        {
+                            unitOfWork.Countries.Add(item.Country);
+                            unitOfWork.Cities.Add(item.City);
+                            unitOfWork.Locations.Add(item.Location);
+                            unitOfWork.Airports.Add(item);
+
+                            unitOfWork.Complete();
+                        }
+                    }
+                }
+            }
         }
 
         private static void SerializeAllData(List<Airport> airports)
@@ -81,8 +123,8 @@ namespace PresentationLayer
 
         private static void ClosestAirportByCoordinates(List<Airport> airports)
         {
-            var inputLocation = new GeoCoordinate(latitude: 69.241186,longitude: 41.217860,altitude: 1400);
-            var nearest = airports.Where(x => x.Location.Latitude <= 90 && x.Location.Latitude >= -90 &&
+            var inputLocation = new GeoCoordinate(latitude: 69.241186, longitude: 41.217860, altitude: 1400);
+            var nearest = airports.Where(x => x.Location != null && x.Location.Latitude <= 90 && x.Location.Latitude >= -90 &&
                                          x.Location.Longitude <= 90 && x.Location.Longitude >= -90)
                                   .Select(x => new
                                   {
@@ -138,6 +180,54 @@ namespace PresentationLayer
 
         #endregion
 
+
+        //private static void ClosestAirportByCoordinates(List<Airport> airports)
+        //{
+        //    // read from console
+        //    double latitude = 69.241186;
+        //    double longitude = 41.217860;
+        //    double altitude = 1400;
+
+        //    using (var unitOfWork = new UnitOfWork(new AirportContext()))
+        //    {
+        //        var nearestAirport = unitOfWork.Airports.GetClosestAirportByInputCoordinates(airports, latitude, longitude, altitude);
+        //        userInterface.Write($"{nearestAirport.City.Name} {nearestAirport.Name} ");
+        //    }
+        //}
+
+        //private static void DisplayAirportInfoByIATACode(List<Airport> airports)
+        //{
+        //    Console.Write("Enter IATA code: ");
+        //    string inputIATACode = Console.ReadLine();
+
+        //    using (var unitOfWork = new UnitOfWork(new AirportContext()))
+        //    {
+        //        var searchedAirport = unitOfWork.Airports.GetAirportInfoByIATACode(airports,inputIATACode);
+
+        //        Console.WriteLine($"Name - {searchedAirport.FullName}, Country - {searchedAirport.Country.Name}, " +
+        //                          $"City - {searchedAirport.City.Name} ");
+        //    }
+        //}
+
+        //private static void CityWithMostAirports(List<Airport> airports)
+        //{
+        //    using (var unitOfWork = new UnitOfWork(new AirportContext()))
+        //    {
+        //        var maxAirportsCity = unitOfWork.Cities.GetCityWithMostAirports(airports);
+        //        userInterface.Write($"City {maxAirportsCity.Item1.Name} has the most airports({maxAirportsCity.Item2})");
+        //    }
+        //}
+
+        //private static void OutputAllCountriesWithNumberOfAirportsThenHave(List<Airport> airports)
+        //{
+        //    using (var unitOfWork = new UnitOfWork(new AirportContext()))
+        //    {
+        //        var airportsInCountry = unitOfWork.Countries.GetAllCountriesWithNumberOfAirportsThenHave(airports).ToList();
+        //        airportsInCountry.ForEach(item => userInterface.Write($"{item.Item1.Name} has {item.Item2} airports"));
+        //    }
+        //}
+
+
         private static void OutputSeparationLine()
         {
             userInterface.Write(new string('*', 50));
@@ -171,13 +261,15 @@ namespace PresentationLayer
 
         private static void ConfigureServices(ContainerBuilder builder)
         {
+            //builder.RegisterType<JsonFileDataDAL>().As<IDataDAL>();
+            // To read data from DB uncomment following
+            builder.RegisterType<DbDataDAL>().As<IDataDAL>();
             builder.RegisterType<DataSerializeBLL>().As<IDataSerializeBLL>();
             builder.RegisterType<ServiceBLL>().As<IServiceBLL>();
             builder.RegisterType<DataProcessor>().As<IDataProcessor>();
-            builder.RegisterType<DataDAL>().As<IDataDAL>();
             builder.RegisterType<DataInstantiator>().As<IDataInstantiator>();
             builder.RegisterType<CustomLogger>().As<ICustomLogger>();
-            builder.RegisterType<FileParser>().As<IFileParser>();
+            builder.RegisterType<FileService>().As<IFileService>();
         }
     }
 }

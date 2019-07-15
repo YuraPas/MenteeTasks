@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BusinessLogicLayer.Interfaces;
-using DataAccessLayer;
 using DataAccessLayer.Interfaces;
 using DataAccessLayer.Models;
 using DataAccessLayer.SerializeModels;
@@ -14,12 +14,12 @@ namespace BusinessLogicLayer
         IDataInstantiator dataInstantiator;
         ICustomLogger logger;
         IServiceBLL service;
-        IFileParser fileParser;
+        IFileService fileParser;
 
-        public DataProcessor(IDataInstantiator dataInstantiator, IDataDAL dataDAL, IServiceBLL service, ICustomLogger logger, IFileParser fileParser)
+        public DataProcessor(IDataDAL dataDAL, IDataInstantiator dataInstantiator, IServiceBLL service, ICustomLogger logger, IFileService fileParser)
         {
-            this.dataInstantiator = dataInstantiator;
             this.dataDAL = dataDAL;
+            this.dataInstantiator = dataInstantiator;
             this.service = service;
             this.logger = logger;
             this.fileParser = fileParser;
@@ -38,7 +38,7 @@ namespace BusinessLogicLayer
                     int currentId = items[0].ToInt();
                     string airportName = items[1];
 
-                    var timeZone = dataDAL.GetAirportsTimeZone(timeZoneAirports, currentId);
+                    var timeZone = GetAirportsTimeZone(timeZoneAirports, currentId);
 
                     if (!service.IsValid(items, timeZone))
                     {
@@ -61,6 +61,26 @@ namespace BusinessLogicLayer
             return result;
         }
 
+        public List<Airport> ProccessData()
+        {
+            var airports = dataDAL.GetAllAirports();
+            var cities = dataDAL.GetAllCities();
+            var countries = dataDAL.GetAllCountries();
+
+            airports = service.AssignGatheredData(airports, cities, countries);
+
+            return airports;
+        }
+
+        private string GetAirportsTimeZone(List<TimeZoneInformation> timeZoneAirports, int searchId)
+        {
+            var timeZone = timeZoneAirports.Where(c => c.AirportId == searchId)
+                                           .Select(c => c.TimeZoneInfoId)
+                                           .FirstOrDefault();
+
+            return timeZone;
+        }
+
         private Airport TransformLineToAirportObject(string[] items, string timeZone)
         {
             int currentId = items[0].ToInt();
@@ -73,9 +93,9 @@ namespace BusinessLogicLayer
             double latitude = items[7].ToDouble();
             double altitude = items[8].ToDouble();
 
-            Country country = dataInstantiator.GetCountry(currentId, countryName);
+            Country country = dataInstantiator.GetCountry(countryName);
 
-            City city = dataInstantiator.GetCity(currentId, cityName, currentId, timeZone, country);
+            City city = dataInstantiator.GetCity(cityName, timeZone);
 
             Func<double, double, double, Location> GetLocation = dataInstantiator.GetLocation;
             Airport airport = dataInstantiator.GetAirport(currentId, airportName, IATACode,

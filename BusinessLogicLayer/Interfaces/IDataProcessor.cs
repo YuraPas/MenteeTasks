@@ -7,5 +7,6 @@ namespace BusinessLogicLayer.Interfaces
     public interface IDataProcessor
     {
         List<Airport> ProccessFile(string pathToFile, List<TimeZoneInformation> timeZoneAirports, ref int rowsIgnored);
+        List<Airport> ProccessData();
     }
 }

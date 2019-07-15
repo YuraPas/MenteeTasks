@@ -72,7 +72,6 @@ namespace BusinessLogicLayer
             for (int i = 0; i < range; i++)
             {
                 airports[i].City = cities[i];
-                airports[i].City.Country = countries[i];
                 airports[i].Country = countries[i];
             }
 

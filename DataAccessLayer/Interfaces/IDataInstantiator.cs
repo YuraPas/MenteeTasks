@@ -9,9 +9,9 @@ namespace DataAccessLayer.Interfaces
     {
         Location GetLocation(double longitude, double latitude, double altitude);
 
-        Country GetCountry(int id, string name);
+        Country GetCountry(string name);
 
-        City GetCity(int id, string name, int countryId, string timeZone, Country country);
+        City GetCity(string name, string timeZone);
 
         Airport GetAirport(int id, string name, string IATACode, string ICAOCode,
                                         Func<double, double, double, Location> MethodName,

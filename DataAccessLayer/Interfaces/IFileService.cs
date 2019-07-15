@@ -4,9 +4,10 @@ using System.Text;
 
 namespace DataAccessLayer.Interfaces
 {
-    public interface IFileParser
+    public interface IFileService
     {
         List<T> ProccessJsonFile<T>(string pathToJsonFile);
         string[] GetAllLinesFromFile(string path);
+        void SerializeToFile<T>(IEnumerable<T> elements, string path);
     }
 }

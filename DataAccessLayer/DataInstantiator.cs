@@ -19,26 +19,22 @@ namespace DataAccessLayer
             return instance;
         }
 
-        public Country GetCountry(int id, string name)
+        public Country GetCountry(string name)
         {
             Country instance = new Country()
             {
-                Id = id,
                 Name = name
             };
 
             return instance;
         }
 
-        public City GetCity(int id, string name, int countryId, string timeZone, Country country)
+        public City GetCity(string name, string timeZone)
         {
             City instance = new City()
             {
-                Id = id,
                 Name = name,
-                CountryId = countryId,
                 TimeZoneName = timeZone,
-                Country = country
             };
 
             return instance;
