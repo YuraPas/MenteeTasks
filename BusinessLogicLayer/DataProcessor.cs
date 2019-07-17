@@ -15,14 +15,16 @@ namespace BusinessLogicLayer
         ICustomLogger logger;
         IServiceBLL service;
         IFileService fileParser;
+        IStrategy strategy;
 
-        public DataProcessor(IDataDAL dataDAL, IDataInstantiator dataInstantiator, IServiceBLL service, ICustomLogger logger, IFileService fileParser)
+        public DataProcessor(IDataDAL dataDAL, IDataInstantiator dataInstantiator, IServiceBLL service, ICustomLogger logger, IFileService fileParser, IStrategy strategy)
         {
             this.dataDAL = dataDAL;
             this.dataInstantiator = dataInstantiator;
             this.service = service;
             this.logger = logger;
             this.fileParser = fileParser;
+            this.strategy = strategy;
         }
 
         public List<Airport> ProccessFile(string pathToFile, List<TimeZoneInformation> timeZoneAirports, ref int rowsIgnored)
@@ -67,7 +69,7 @@ namespace BusinessLogicLayer
             var cities = dataDAL.GetAllCities();
             var countries = dataDAL.GetAllCountries();
 
-            airports = service.AssignGatheredData(airports, cities, countries);
+            airports = strategy.AssignGatheredData(airports, cities, countries);
 
             return airports;
         }

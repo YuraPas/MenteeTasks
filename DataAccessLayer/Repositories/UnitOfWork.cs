@@ -23,8 +23,6 @@ namespace DataAccessLayer.Repositories
             Cities = new CityRepository(_context);
             Countries = new CountryRepository(_context);
             Locations = new LocationRepository(_context);
-
-
         }
 
         public int Complete()

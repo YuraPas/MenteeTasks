@@ -10,6 +10,6 @@ namespace BusinessLogicLayer.Interfaces
         string[] SplitLine(string line);
         bool IsValid(string[] items, string timeZone);
         bool SerializedFilesExist();
-        List<Airport> AssignGatheredData(List<Airport> airports, List<City> cities, List<Country> countries);
+        List<Airport> AddLocationToAirport(List<Airport> airports);
     }
 }

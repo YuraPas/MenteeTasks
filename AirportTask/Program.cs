@@ -34,6 +34,8 @@ namespace PresentationLayer
             var serviceBLL = serviceProvider.GetService<IServiceBLL>();
             var fileParser = serviceProvider.GetService<IFileService>();
 
+            SeedDataToDb(airports);
+
             if (serviceBLL.SerializedFilesExist())
             {
                 airports = dataProcessor.ProccessData();
@@ -54,10 +56,8 @@ namespace PresentationLayer
                 userInterface.Write("Serialization completed");
             }
 
-            SeedDataToDb(airports);
 
-            airports = AddLocationToAirport(airports);
-            
+
             OutputSeparationLine();
             OutputAllCountriesWithNumberOfAirportsThenHave(airports);
 
@@ -76,20 +76,6 @@ namespace PresentationLayer
 
         }
 
-        private static List<Airport> AddLocationToAirport(List<Airport> airports)
-        {
-            using (var unitOfWork = new UnitOfWork(new AirportContext()))
-            {
-                foreach (var item in airports)
-                {
-                    item.Location = unitOfWork.Locations.GetById(item.Id);
-                }
-            }
-
-            return airports;
-
-        }
-
         private static void SeedDataToDb(List<Airport> airports)
         {
             using (var db = new AirportContext())
@@ -100,8 +86,27 @@ namespace PresentationLayer
                     {
                         foreach (var item in airports)
                         {
-                            unitOfWork.Countries.Add(item.Country);
-                            unitOfWork.Cities.Add(item.City);
+                            Tuple<bool, int> itemExists = ItemExistsInDb(item.City);
+                            if (itemExists.Item1)
+                            {
+                                    item.CityId = itemExists.Item2;
+                            }
+                            else
+                            {
+                                unitOfWork.Cities.Add(item.City);
+                            }
+
+                            itemExists = ItemExistsInDb(item.Country);
+
+                            if (itemExists.Item1)
+                            {
+                                item.CountryId = itemExists.Item2;
+                            }
+                            else
+                            {
+                                unitOfWork.Countries.Add(item.Country);
+                            }
+
                             unitOfWork.Locations.Add(item.Location);
                             unitOfWork.Airports.Add(item);
 
@@ -109,6 +114,31 @@ namespace PresentationLayer
                         }
                     }
                 }
+            }
+        }
+
+        private static Tuple<bool, int> ItemExistsInDb<T>(T item)
+        {
+            using (var db = new AirportContext())
+            {
+                int id;
+
+                if (item is City city)
+                {
+                    var searchCity = db.Cities.Where(c => c.Name.ToLower() == city.Name.ToLower()).FirstOrDefault();
+
+                    id = searchCity == null ? 0 : searchCity.CityId;
+
+                    return Tuple.Create(searchCity != null, id);
+                }
+
+                var country = item as Country;
+                var searchCountry = db.Countries.Where(c => c.Name.ToLower() == country.Name.ToLower()).FirstOrDefault();
+
+                id = searchCountry == null ? 0 : searchCountry.CountryId;
+
+                return Tuple.Create(searchCountry != null, id);
+
             }
         }
 
@@ -180,54 +210,6 @@ namespace PresentationLayer
 
         #endregion
 
-
-        //private static void ClosestAirportByCoordinates(List<Airport> airports)
-        //{
-        //    // read from console
-        //    double latitude = 69.241186;
-        //    double longitude = 41.217860;
-        //    double altitude = 1400;
-
-        //    using (var unitOfWork = new UnitOfWork(new AirportContext()))
-        //    {
-        //        var nearestAirport = unitOfWork.Airports.GetClosestAirportByInputCoordinates(airports, latitude, longitude, altitude);
-        //        userInterface.Write($"{nearestAirport.City.Name} {nearestAirport.Name} ");
-        //    }
-        //}
-
-        //private static void DisplayAirportInfoByIATACode(List<Airport> airports)
-        //{
-        //    Console.Write("Enter IATA code: ");
-        //    string inputIATACode = Console.ReadLine();
-
-        //    using (var unitOfWork = new UnitOfWork(new AirportContext()))
-        //    {
-        //        var searchedAirport = unitOfWork.Airports.GetAirportInfoByIATACode(airports,inputIATACode);
-
-        //        Console.WriteLine($"Name - {searchedAirport.FullName}, Country - {searchedAirport.Country.Name}, " +
-        //                          $"City - {searchedAirport.City.Name} ");
-        //    }
-        //}
-
-        //private static void CityWithMostAirports(List<Airport> airports)
-        //{
-        //    using (var unitOfWork = new UnitOfWork(new AirportContext()))
-        //    {
-        //        var maxAirportsCity = unitOfWork.Cities.GetCityWithMostAirports(airports);
-        //        userInterface.Write($"City {maxAirportsCity.Item1.Name} has the most airports({maxAirportsCity.Item2})");
-        //    }
-        //}
-
-        //private static void OutputAllCountriesWithNumberOfAirportsThenHave(List<Airport> airports)
-        //{
-        //    using (var unitOfWork = new UnitOfWork(new AirportContext()))
-        //    {
-        //        var airportsInCountry = unitOfWork.Countries.GetAllCountriesWithNumberOfAirportsThenHave(airports).ToList();
-        //        airportsInCountry.ForEach(item => userInterface.Write($"{item.Item1.Name} has {item.Item2} airports"));
-        //    }
-        //}
-
-
         private static void OutputSeparationLine()
         {
             userInterface.Write(new string('*', 50));
@@ -262,8 +244,11 @@ namespace PresentationLayer
         private static void ConfigureServices(ContainerBuilder builder)
         {
             //builder.RegisterType<JsonFileDataDAL>().As<IDataDAL>();
-            // To read data from DB uncomment following
+            //builder.RegisterType<ConcreateStrategyJsonFile>().As<IStrategy>();
+            // To read data from DB uncomment next two lines
             builder.RegisterType<DbDataDAL>().As<IDataDAL>();
+            builder.RegisterType<ConcreateStrategyDb>().As<IStrategy>();
+
             builder.RegisterType<DataSerializeBLL>().As<IDataSerializeBLL>();
             builder.RegisterType<ServiceBLL>().As<IServiceBLL>();
             builder.RegisterType<DataProcessor>().As<IDataProcessor>();

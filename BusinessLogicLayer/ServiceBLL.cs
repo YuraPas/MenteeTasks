@@ -1,5 +1,7 @@
 ﻿using BusinessLogicLayer.Interfaces;
+using DataAccessLayer;
 using DataAccessLayer.Models;
+using DataAccessLayer.Repositories;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -65,19 +67,18 @@ namespace BusinessLogicLayer
             return false;
         }
 
-        public List<Airport> AssignGatheredData(List<Airport> airports, List<City> cities, List<Country> countries)
+        public List<Airport> AddLocationToAirport(List<Airport> airports)
         {
-            int range = airports.Count();
-
-            for (int i = 0; i < range; i++)
+            using (var unitOfWork = new UnitOfWork(new AirportContext()))
             {
-                airports[i].City = cities[i];
-                airports[i].Country = countries[i];
-            }
+                var locations = unitOfWork.Locations.GetAll().ToList();
 
+                for (int i = 0; i < airports.Count; i++)
+                {
+                    airports[i].Location = locations[i];
+                }
+            }
             return airports;
         }
-
-    
-}
+    }
 }

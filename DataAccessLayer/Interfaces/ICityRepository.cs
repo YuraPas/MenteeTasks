@@ -7,6 +7,5 @@ namespace DataAccessLayer.Interfaces
 {
     public interface ICityRepository : IRepository<City>
     {
-        Tuple<City, int> GetCityWithMostAirports(List<Airport> airports);
     }
 }
